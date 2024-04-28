@@ -1,86 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+
+
+
+const relations = ["Siblings", "Friends", "Love", "Affection", "Marriage", "Enemy"]
+function findRelation(name1, name2) {
+    // calculate frequency for name1 
+    let map = {};
+    let n = name1.length, m = name2.length;
+    for (let i = 0; i < n; i++) {
+        let char = name1[i];
+        if (map[char]) {
+            map[char]++;
+        }
+        else map[char] = 1;
+    }
+
+    let common = 0;
+    for (let i = 0; i < m; i++) {
+        let char = name2[i];
+        if (map[char]) {
+            map[char]--;
+            common++;
+        }
+    }
+    return relations[(n + m - 2 * common) % 6]
+}
 
 const App = () => {
-  const [name1, setName1] = useState('');
-  const [name2, setName2] = useState('');
-  const [relationship, setRelationship] = useState('');
-
-  const handleChangeName1 = (event) => {
-    setName1(event.target.value);
+  const styles = {
+   
+    text: {
+      color: 'rgb(116,192,225)',
+      fontSize: '16px',
+    },
   };
+    // 2 inputs 
+    // 2 buttons 
+    // 1 result text
 
-  const handleChangeName2 = (event) => {
-    setName2(event.target.value);
-  };
+    const [name1, setName1] = useState('');
+    const [name2, setName2] = useState('');
+    const [relation, setRelation] = useState('');
 
-  const handleCalculateRelationship = () => {
-    const name1Chars = name1.split('');
-    const name2Chars = name2.split('');
-    
-    // Remove common characters
-    const uniqueName1Chars = name1Chars.filter(char => !name2Chars.includes(char));
-    const uniqueName2Chars = name2Chars.filter(char => !name1Chars.includes(char));
-
-    const combinedLength = uniqueName1Chars.length + uniqueName2Chars.length;
-    const relationshipIndex = combinedLength % 6;
-
-    switch (relationshipIndex) {
-      case 1:
-        setRelationship('Friends');
-        break;
-      case 2:
-        setRelationship('Love');
-        break;
-      case 3:
-        setRelationship('Affection');
-        break;
-      case 4:
-        setRelationship('Marriage');
-        break;
-      case 5:
-        setRelationship('Enemy');
-        break;
-      case 0:
-        setRelationship('Siblings');
-        break;
-      default:
-        setRelationship('Please enter valid input');
+    const calculate = () => {
+        setRelation(findRelation(name1, name2))
     }
-  };
+    const clear = () => {
+        setName1('');
+        setName2('');
+        setRelation('')
+    }
 
-  const handleClear = () => {
-    setName1('');
-    setName2('');
-    setRelationship('');
-  };
+    return (
+        <div style={{ margin: 70 }} id="main">
+            <input value={name1} onChange={(e) => setName1(e.target.value)}placeholder="Enter first name"  data-testid="input1"/>
 
-  return (
-    <div>
-      <input
-        type="text"
-        value={name1}
-        onChange={handleChangeName1}
-        placeholder="Enter name 1"
-        data-testid="input1"
-      />
-   
-      <input
-        type="text"
-        value={name2}
-        onChange={handleChangeName2}
-        placeholder="Enter name 2"
-        data-testid="input2"
-      />
-   
-      <button onClick={handleCalculateRelationship} data-testid="calculate_relationship">
-        Calculate Relationship
-      </button>
-      <button onClick={handleClear} data-testid="clear">
-        Clear
-      </button>
-      <h3 data-testid="answer">{relationship}</h3>
-    </div>
-  );
-};
+            <input value={name2}onChange={(e) => setName2(e.target.value)}placeholder="Enter second name"data-testid="input2"/>
+
+            <button data-testid="calculate_relationship"style={styles.text} onClick={calculate}>Calculate Relationshuip Future</button>
+
+            <button style={styles.text} onClick={clear} data-testid="clear">Clear</button>
+
+            {relation && <h3 data-testid="answer">{relation}</h3>}
+        </div>
+    );
+}
+
 
 export default App;
