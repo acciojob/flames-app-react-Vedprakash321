@@ -26,7 +26,7 @@ function findRelation(name1, name2) {
     return relations[(n + m - 2 * common) % 6]
 }
 
-const FlamesApp = () => {
+const App = () => {
     // 2 inputs 
     // 2 buttons 
     // 1 result text
@@ -60,4 +60,4 @@ const FlamesApp = () => {
 }
 
 
-export default FlamesApp;
+export default App;
